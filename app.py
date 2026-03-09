@@ -1,7 +1,7 @@
 """
-AfCFTA–EPA Bargaining Asymmetry Simulator
+Economic Partnership Agreements Bargaining Engine
 Sequential Game Engine for African States
-v1.0 — March 2026
+v1.0 — Updated January 2026
 
 An interactive sequential-game simulator that quantifies bargaining power
 asymmetries when negotiating AfCFTA protocols while locked into EPA schedules,
@@ -69,7 +69,7 @@ def metric_card(label: str, value: str):
 
 
 # ══════════════════════════════════════════════════════════════
-# COLOUR PALETTE (Perplexity brand tokens)
+# COLOUR PALETTE 
 # ══════════════════════════════════════════════════════════════
 
 C = {
@@ -767,8 +767,8 @@ def viz_bpi_bar(bpi_dict):
 # ══════════════════════════════════════════════════════════════
 
 with st.sidebar:
-    st.markdown("## 🌍 AfCFTA–EPA Simulator")
-    st.caption("Sequential bargaining game engine for African trade negotiators.")
+    st.markdown("## 🌍 Economic Partnership Agreements Bargaining Engine")
+    st.caption("Sequential bargaining engine for African trade negotiators.")
     st.markdown("---")
 
     st.markdown("### Country & Peers")
