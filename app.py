@@ -27,8 +27,8 @@ from datetime import datetime
 # ══════════════════════════════════════════════════════════════
 
 st.set_page_config(
-    page_title="AfCFTA–EPA Bargaining Simulator",
-    page_icon="🌍",
+    page_title="Economic Partnership Agreements Bargaining Engine",
+    page_icon="🎛️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
