@@ -27,7 +27,7 @@ from datetime import datetime
 # ══════════════════════════════════════════════════════════════
 
 st.set_page_config(
-    page_title="Economic Partnership Agreements Bargaining Engine",
+    page_title="EPA Bargaining Engine · Designing Decision Systems",
     page_icon="🎛️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -35,25 +35,106 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    [data-testid="stSidebar"] { background-color: #13343B; }
-    [data-testid="stSidebar"] * { color: #F3F3EE !important; }
+    /* ── Canvas & App Shell ── */
+    .stApp { background-color: #0D1117; }
+    .main .block-container { background-color: #0D1117; padding-top: 2rem; }
+
+    /* ── Sidebar ── */
+    [data-testid="stSidebar"] { background-color: #0F1923 !important; }
+    [data-testid="stSidebar"] * { color: #E6EDF3 !important; }
     [data-testid="stSidebar"] .stSelectbox label,
     [data-testid="stSidebar"] .stSlider label,
-    [data-testid="stSidebar"] .stMultiSelect label {
-        color: #BCE2E7 !important; font-weight: 500;
+    [data-testid="stSidebar"] .stMultiSelect label,
+    [data-testid="stSidebar"] .stRadio label {
+        color: #8B949E !important; font-size: 0.83rem; font-weight: 500;
     }
+    [data-testid="stSidebar"] hr { border-color: #21262D; }
+    [data-testid="stSidebar"] .stExpander { border: 1px solid #21262D !important; border-radius: 4px; }
+
+    /* ── Brand Insignia ── */
+    .brand-insignia {
+        font-family: Inter, sans-serif;
+        font-size: 0.70rem;
+        font-variant: small-caps;
+        letter-spacing: 0.08em;
+        color: #8B949E;
+        margin-top: 2px;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    /* ── Metric Cards ── */
     .metric-card {
-        background: #F3F3EE; padding: 14px 18px; border-radius: 8px;
-        border-left: 4px solid #20808D; margin-bottom: 8px;
+        background: #161B22;
+        padding: 14px 18px;
+        border-radius: 4px;
+        border-left: 3px solid #1B6CA8;
+        border: 1px solid #21262D;
+        border-left: 3px solid #1B6CA8;
+        margin-bottom: 8px;
     }
-    .metric-card .label { font-size: 0.82rem; color: #2E565D; margin-bottom: 2px; }
-    .metric-card .value { font-size: 1.55rem; font-weight: 700; color: #13343B; }
+    .metric-card .label {
+        font-size: 0.75rem; color: #8B949E; margin-bottom: 4px;
+        font-variant: small-caps; letter-spacing: 0.04em;
+    }
+    .metric-card .value { font-size: 1.45rem; font-weight: 700; color: #E6EDF3; }
+
+    /* ── Briefing Block ── */
+    .briefing-block {
+        background: #161B22;
+        border: 1px solid #21262D;
+        border-left: 3px solid #1B6CA8;
+        border-radius: 4px;
+        padding: 18px 22px;
+        margin-bottom: 20px;
+    }
+    .briefing-block .bb-title {
+        font-size: 0.70rem; font-variant: small-caps; letter-spacing: 0.08em;
+        color: #8B949E; margin-bottom: 14px; display: block;
+    }
+    .briefing-block .bb-section { margin-bottom: 12px; }
+    .briefing-block .bb-label {
+        font-size: 0.72rem; font-weight: 600; color: #1B6CA8;
+        text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 3px;
+    }
+    .briefing-block .bb-text { font-size: 0.88rem; color: #E6EDF3; line-height: 1.5; }
+    .briefing-block .bb-text-muted { font-size: 0.85rem; color: #8B949E; line-height: 1.5; }
+
+    /* ── Analyst Note ── */
+    .analyst-note {
+        background: #161B22;
+        border: 1px solid #21262D;
+        border-left: 3px solid #8B949E;
+        border-radius: 4px;
+        padding: 12px 16px;
+        margin: 8px 0;
+        font-size: 0.86rem; color: #8B949E; line-height: 1.5;
+    }
+    .analyst-note.positive { border-left-color: #3FB950; }
+    .analyst-note.warning  { border-left-color: #D29922; }
+    .analyst-note.negative { border-left-color: #F85149; }
+
+    /* ── Source Notes ── */
     .source-note {
-        font-size: 0.78rem; color: #2E565D; margin-top: 6px;
-        border-top: 1px solid #E5E3D4; padding-top: 6px;
+        font-size: 0.75rem; color: #8B949E; margin-top: 8px;
+        border-top: 1px solid #21262D; padding-top: 6px;
     }
-    h1, h2, h3 { color: #13343B !important; }
-    div[data-testid="stExpander"] { border: 1px solid #E5E3D4; border-radius: 8px; }
+
+    /* ── Headings ── */
+    h1 { color: #E6EDF3 !important; font-weight: 600; font-size: 1.55rem !important; }
+    h2 { color: #E6EDF3 !important; font-weight: 600; }
+    h3 { color: #C9D1D9 !important; font-weight: 600; }
+
+    /* ── Expanders ── */
+    div[data-testid="stExpander"] { border: 1px solid #21262D !important; border-radius: 4px; }
+    div[data-testid="stExpander"] summary { color: #E6EDF3; }
+
+    /* ── Tabs ── */
+    button[data-baseweb="tab"] { color: #8B949E !important; }
+    button[data-baseweb="tab"][aria-selected="true"] { color: #E6EDF3 !important; border-bottom-color: #1B6CA8 !important; }
+
+    /* ── Dataframe ── */
+    [data-testid="stDataFrame"] { border: 1px solid #21262D; border-radius: 4px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -63,9 +144,16 @@ def metric_card(label: str, value: str):
     st.markdown(
         f'<div class="metric-card">'
         f'<div class="label">{label}</div>'
-        f'<div class="value">{value}</div></div>',
+        f'<div class="value">{value}</div>'
+        f'</div>',
         unsafe_allow_html=True,
     )
+
+
+def analyst_note(text: str, variant: str = "") -> None:
+    """Render an analyst annotation block."""
+    cls = f"analyst-note {variant}".strip()
+    st.markdown(f'<div class="{cls}">{text}</div>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════════════
@@ -73,26 +161,70 @@ def metric_card(label: str, value: str):
 # ══════════════════════════════════════════════════════════════
 
 C = {
-    "teal": "#20808D",
-    "rust": "#A84B2F",
-    "dark": "#1B474D",
-    "cyan": "#BCE2E7",
-    "mauve": "#944454",
-    "gold": "#FFC553",
-    "olive": "#848456",
-    "brown": "#6E522B",
-    "bg": "#FCFAF6",
-    "paper": "#F3F3EE",
-    "text": "#13343B",
-    "muted": "#2E565D",
+    # Core design system
+    "bg":       "#0D1117",   # canvas
+    "paper":    "#161B22",   # panel / card
+    "sidebar":  "#0F1923",
+    "accent":   "#1B6CA8",   # primary accent
+    "accent2":  "#1B474D",   # secondary accent
+    "border":   "#21262D",
+    "text":     "#E6EDF3",   # primary text
+    "muted":    "#8B949E",   # secondary text
+    "positive": "#3FB950",   # positive signal
+    "negative": "#F85149",   # negative signal
+    "warning":  "#D29922",   # warning / caution
+    # Legacy aliases kept for chart compatibility
+    "teal":  "#1B6CA8",
+    "rust":  "#F85149",
+    "dark":  "#1B474D",
+    "cyan":  "#8B949E",
+    "mauve": "#D29922",
+    "gold":  "#D29922",
+    "olive": "#3FB950",
+    "brown": "#8B949E",
 }
-SEQ = [C["teal"], C["rust"], C["dark"], C["cyan"], C["mauve"], C["gold"], C["olive"], C["brown"]]
+SEQ = [
+    C["accent"], C["positive"], C["warning"], C["negative"],
+    C["muted"], C["accent2"], "#C9A84C", "#58A6FF",
+]
 
 LAYOUT = dict(
     font=dict(family="Inter, sans-serif", color=C["text"]),
-    paper_bgcolor=C["bg"], plot_bgcolor=C["paper"],
-    margin=dict(l=40, r=40, t=60, b=40),
+    paper_bgcolor=C["bg"],
+    plot_bgcolor=C["paper"],
+    margin=dict(l=60, r=60, t=60, b=50),
 )
+
+
+# ── Central analyst-facing label map ──
+COLUMN_LABELS = {
+    "x_eu": "Exports to EU (%)", "m_eu": "Imports from EU (%)",
+    "x_cn": "Exports to China (%)", "m_cn": "Imports from China (%)",
+    "x_us": "Exports to US (%)", "m_us": "Imports from US (%)",
+    "x_af": "Exports to Africa (%)", "m_af": "Imports from Africa (%)",
+    "openness": "Trade Openness", "hhi": "Export Concentration (HHI)",
+    "va": "Voice & Accountability", "ps": "Political Stability",
+    "ge": "Govt Effectiveness", "rq": "Regulatory Quality",
+    "rl": "Rule of Law", "cc": "Control of Corruption",
+    "nci": "Negotiation Capacity Index",
+    "cn_loan": "Chinese Loans (USD bn)", "cn_fdi": "Chinese FDI (USD bn)",
+    "bri": "BRI Projects", "agoa": "AGOA Eligible",
+    "agoa_x": "AGOA Exports (USD mn)", "eu_aid": "EU Dev. Aid (USD mn)",
+    "eu_adj": "EU Adjustment (USD mn)", "cn_debt_gdp": "Chinese Debt (% GDP)",
+    "cn_infra_dep": "Infra Dependence (0–1)",
+    "ldc": "LDC Status", "cu": "Customs Union",
+    "epa": "EPA Status", "afcfta_sched": "AfCFTA Schedule Submitted",
+    "epa_exp": "EPA Exposure", "afcfta_opp": "AfCFTA Opportunity",
+    "emp": "Employment Share", "gdp_sh": "GDP Share",
+    "sens": "Sensitivity", "desc": "Description",
+    "AfCFTA_Gain": "AfCFTA Gain", "EPA_Cost": "EPA Cost",
+    "Emp_Risk": "Employment Risk",
+    "EU_Export": "Exports to EU (%)", "China_Import": "Imports from China (%)",
+    "Africa_Export": "Exports to Africa (%)", "Neg_Capacity": "Negotiation Capacity",
+    "CN_Debt_GDP": "Chinese Debt (% GDP)",
+    "gdp": "GDP (USD bn)", "pop": "Population (mn)",
+    "region": "Region",
+}
 
 
 # ══════════════════════════════════════════════════════════════
@@ -283,6 +415,91 @@ LABELS = {
     "STATUS_QUO": "Status Quo",
     "START": "Start",
 }
+
+
+def briefing_block(country: str, bp: dict, eq_pay: dict, tdf, td: dict, par: "Params") -> None:
+    """Render a top-of-page Strategic Brief panel from existing computed outputs."""
+    # Recommendation: dominant Africa equilibrium action label
+    bpi_val = bp["BPI"]
+    eu_dep = (td["x_eu"] + td["m_eu"]) / 2
+    af_pay = eq_pay["africa"]
+
+    # Derive recommendation text from BPI and equilibrium payoff
+    if bpi_val >= 60:
+        rec = "Pursue selective AfCFTA liberalisation as a credible outside option before deepening EPA commitments."
+    elif bpi_val >= 45:
+        rec = "Sequence concessions carefully: leverage AfCFTA scheduling to extract EU adjustment support before accepting EPA deepening."
+    else:
+        rec = "Adopt a defensive posture: prioritise building governance capacity and intra-African trade before committing to further EPA obligations."
+
+    # Why it holds
+    top_comp = max(
+        [("Trade Diversification", bp["Diversification"]),
+         ("Governance Capacity", bp["Capacity"]),
+         ("Outside Options", bp["Outside"]),
+         ("Policy Space", 100 - bp["Lock_in"])],
+        key=lambda x: x[1]
+    )
+    why = (
+        f"The model's dominant driver is <strong>{top_comp[0]}</strong> "
+        f"(score {top_comp[1]:.0f}/100). "
+        f"EU trade dependence stands at {eu_dep:.1f}% of total trade, "
+        f"{'creating significant bilateral leverage for the EU' if eu_dep > 30 else 'leaving meaningful room for alternative positioning'}."
+    )
+
+    # Assumption context
+    if par.cn_infra >= 0.30:
+        ctx = f"The Chinese infrastructure offer parameter is elevated ({par.cn_infra:.2f}), materially improving Africa's outside-option value."
+    elif par.sq_bias >= 0.25:
+        ctx = f"Status-quo bias is set high ({par.sq_bias:.2f}), compressing the effective range of concession moves."
+    elif par.epa_mfn >= 0.20:
+        ctx = f"The MFN clause penalty is elevated ({par.epa_mfn:.2f}), increasing the cost of AfCFTA-first strategies."
+    else:
+        ctx = (
+            f"Parameters reflect empirical defaults: Africa discount factor {par.d_af:.2f}, "
+            f"loss aversion λ={par.loss_av:.2f}, ambiguity premium {par.ambig:.2f}. "
+            "Adjust these in the sidebar to test alternative structural assumptions."
+        )
+
+    # Fragility
+    if af_pay > 62:
+        frag = "The equilibrium payoff is comfortably above the neutral threshold (50). The recommendation is <strong>robust</strong> to moderate parameter shifts. A substantial increase in EU aid conditionality or MFN penalty would be required to alter the dominant strategy."
+    elif af_pay > 52:
+        frag = "The equilibrium payoff is modestly above neutral. The recommendation is <strong>conditionally stable</strong>: a shift in Chinese infrastructure availability or EPA standstill costs of ±0.05 could alter the dominant action. Use the Sensitivity Analysis page to test specific flip conditions."
+    elif af_pay > 45:
+        frag = "The equilibrium payoff is near neutral. The recommendation is <strong>fragile</strong>: small parameter changes can flip the dominant strategy. Treat this as a zone of genuine strategic uncertainty."
+    else:
+        frag = "The equilibrium payoff is below neutral. The model indicates structural disadvantage under current assumptions. Improving governance capacity (NCI) or diversifying trade partners are the most impactful levers available within the model."
+
+    # Credible threats context
+    credible = tdf[tdf["Credible"] == "Yes"]
+    if not credible.empty:
+        threat_note = f"Credible threat identified: <strong>{credible.iloc[0]['Threat']}</strong> improves Africa's payoff above status quo."
+    else:
+        threat_note = "No fully credible threat detected under current parameters. Threats are analytically partial or non-credible — this constrains leverage."
+
+    html = f"""
+<div class="briefing-block">
+  <span class="bb-title">Strategic Brief — {country}</span>
+  <div class="bb-section">
+    <span class="bb-label">Current Recommendation</span>
+    <span class="bb-text">{rec}</span>
+  </div>
+  <div class="bb-section">
+    <span class="bb-label">Why This Holds</span>
+    <span class="bb-text">{why}</span>
+  </div>
+  <div class="bb-section">
+    <span class="bb-label">Assumption Context</span>
+    <span class="bb-text-muted">{ctx}</span>
+  </div>
+  <div class="bb-section">
+    <span class="bb-label">Fragility &amp; Flip Conditions</span>
+    <span class="bb-text-muted">{frag} {threat_note}</span>
+  </div>
+</div>
+"""
+    st.markdown(html, unsafe_allow_html=True)
 
 
 def _pay_africa(actions: list, p: Params, td: dict, wgi: dict) -> float:
@@ -611,12 +828,25 @@ def viz_radar(bpi_d, country):
     cats = ["Diversification", "Capacity", "Outside Options", "Policy Space", "Econ. Weight"]
     vals = [bpi_d["Diversification"], bpi_d["Capacity"], bpi_d["Outside"],
             100 - bpi_d["Lock_in"], bpi_d["Weight"]]
+    accent_rgb = "27,108,168"
     fig = go.Figure(go.Scatterpolar(r=vals + [vals[0]], theta=cats + [cats[0]],
-        fill="toself", fillcolor="rgba(32,128,141,0.25)", line=dict(color=C["teal"], width=2)))
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100]),
-                                 bgcolor=C["paper"]),
-                      title=f"Bargaining Power: {country}", height=420,
-                      showlegend=False, **LAYOUT)
+        fill="toself", fillcolor=f"rgba({accent_rgb},0.20)",
+        line=dict(color=C["accent"], width=2)))
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 100],
+                            tickfont=dict(size=9, color=C["muted"]),
+                            gridcolor=C["border"]),
+            angularaxis=dict(tickfont=dict(size=11, color=C["text"]),
+                             gridcolor=C["border"]),
+            bgcolor=C["paper"],
+        ),
+        title=dict(text=f"Baseline Power Components: {country}", font=dict(size=13)),
+        height=440,
+        showlegend=False,
+        margin=dict(l=90, r=90, t=80, b=70),
+        **{k: v for k, v in LAYOUT.items() if k != "margin"},
+    )
     return fig
 
 
@@ -628,70 +858,118 @@ def viz_radar_compare(bpi_dict):
         col = SEQ[i % len(SEQ)]
         fig.add_trace(go.Scatterpolar(r=vals + [vals[0]], theta=cats + [cats[0]], name=c,
             line=dict(color=col, width=2), fill="toself",
-            fillcolor=f"rgba({int(col[1:3],16)},{int(col[3:5],16)},{int(col[5:7],16)},0.1)"))
-    fig.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 100]),
-                                 bgcolor=C["paper"]),
-                      title="Comparative Bargaining Power", height=480,
-                      legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center"), **LAYOUT)
+            fillcolor=f"rgba({int(col[1:3],16)},{int(col[3:5],16)},{int(col[5:7],16)},0.10)"))
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 100],
+                            tickfont=dict(size=9, color=C["muted"]),
+                            gridcolor=C["border"]),
+            angularaxis=dict(tickfont=dict(size=11, color=C["text"]),
+                             gridcolor=C["border"]),
+            bgcolor=C["paper"],
+        ),
+        title=dict(text="Peer Bargaining Power Comparison", font=dict(size=13)),
+        height=500,
+        margin=dict(l=90, r=90, t=80, b=90),
+        legend=dict(orientation="h", y=-0.18, x=0.5, xanchor="center",
+                    font=dict(color=C["text"])),
+        **{k: v for k, v in LAYOUT.items() if k != "margin"},
+    )
     return fig
 
 
 def viz_sunburst(td, country):
     labs = ["Trade", "Exports", "Imports",
-            "EU(X)", "China(X)", "US(X)", "Africa(X)", "Other(X)",
-            "EU(M)", "China(M)", "US(M)", "Africa(M)", "Other(M)"]
+            "EU (Exports)", "China (Exports)", "US (Exports)", "Africa (Exports)", "Other (Exports)",
+            "EU (Imports)", "China (Imports)", "US (Imports)", "Africa (Imports)", "Other (Imports)"]
     pars = ["", "Trade", "Trade",
             "Exports", "Exports", "Exports", "Exports", "Exports",
             "Imports", "Imports", "Imports", "Imports", "Imports"]
     oth_x = max(0, 100 - td["x_eu"] - td["x_cn"] - td["x_us"] - td["x_af"])
     oth_m = max(0, 100 - td["m_eu"] - td["m_cn"] - td["m_us"] - td["m_af"])
-    vals = [0, 50, 50, td["x_eu"], td["x_cn"], td["x_us"], td["x_af"], oth_x,
+    # branchvalues="total": each parent value must equal the sum of its children
+    # Exports children sum to 100, Imports children sum to 100, Trade root = 200
+    vals = [200, 100, 100,
+            td["x_eu"], td["x_cn"], td["x_us"], td["x_af"], oth_x,
             td["m_eu"], td["m_cn"], td["m_us"], td["m_af"], oth_m]
-    fig = go.Figure(go.Sunburst(labels=labs, parents=pars, values=vals, branchvalues="total",
-        marker=dict(colors=[C["paper"], C["teal"], C["rust"],
-            C["dark"], C["mauve"], C["gold"], C["teal"], C["olive"],
-            C["dark"], C["mauve"], C["gold"], C["teal"], C["olive"]]),
-        hovertemplate="<b>%{label}</b><br>%{value:.1f}%<extra></extra>"))
-    fig.update_layout(title=f"{country}: Trade Partner Dependence (%)", height=440, **LAYOUT)
+    colors = [C["paper"], C["accent"], C["negative"],
+              C["accent"], C["warning"], C["positive"], C["accent2"], C["muted"],
+              C["accent"], C["warning"], C["positive"], C["accent2"], C["muted"]]
+    fig = go.Figure(go.Sunburst(
+        labels=labs, parents=pars, values=vals, branchvalues="total",
+        marker=dict(colors=colors),
+        hovertemplate="<b>%{label}</b><br>%{value:.1f}%<extra></extra>",
+    ))
+    fig.update_layout(
+        title=dict(text=f"{country}: Trade Partner Dependence (%)", font=dict(size=13)),
+        height=440,
+        **LAYOUT,
+    )
     return fig
 
 
 def viz_epa(epa_df, country):
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Bar(x=epa_df["year"], y=epa_df["pct_liberalised"],
-        name="Lines Liberalised (%)", marker_color=C["teal"], opacity=0.7), secondary_y=False)
+        name="Tariff Lines Liberalised (%)", marker_color=C["accent"], opacity=0.75), secondary_y=False)
     fig.add_trace(go.Scatter(x=epa_df["year"], y=epa_df["revenue_loss_mn"],
-        name="Revenue Loss (USD mn)", line=dict(color=C["rust"], width=2),
+        name="Revenue Loss (USD mn)", line=dict(color=C["negative"], width=2),
         mode="lines+markers", marker=dict(size=6)), secondary_y=True)
-    fig.update_layout(title=f"{country}: EPA Liberalisation & Revenue Impact", height=380,
-        legend=dict(orientation="h", y=1.05, x=1, xanchor="right"), **LAYOUT)
-    fig.update_yaxes(title_text="Liberalised (%)", secondary_y=False)
-    fig.update_yaxes(title_text="Revenue Loss (USD mn)", secondary_y=True)
+    fig.update_layout(
+        title=dict(text=f"{country}: EPA Liberalisation Schedule & Fiscal Impact", font=dict(size=13)),
+        height=380,
+        legend=dict(orientation="h", y=1.05, x=1, xanchor="right", font=dict(color=C["text"])),
+        **LAYOUT,
+    )
+    fig.update_yaxes(title_text="Liberalised (%)", secondary_y=False,
+                     title_font=dict(color=C["muted"]), tickfont=dict(color=C["muted"]))
+    fig.update_yaxes(title_text="Revenue Loss (USD mn)", secondary_y=True,
+                     title_font=dict(color=C["muted"]), tickfont=dict(color=C["muted"]))
     return fig
 
 
 def viz_gp(gp, country):
-    cats = ["Infra Loans\n(USD bn)", "FDI Stock\n(USD bn)", "EU Dev Aid\n(×100 mn)", "AGOA Exports\n(×100 mn)"]
+    cats = ["Infra Loans (USD bn)", "FDI Stock (USD bn)", "EU Dev. Aid (×100 mn)", "AGOA Exports (×100 mn)"]
     fig = go.Figure()
-    fig.add_trace(go.Bar(name="China", x=cats, y=[gp["cn_loan"], gp["cn_fdi"], 0, 0], marker_color=C["mauve"]))
-    fig.add_trace(go.Bar(name="EU", x=cats, y=[0, 0, gp["eu_aid"]/100, 0], marker_color=C["teal"]))
-    fig.add_trace(go.Bar(name="US", x=cats, y=[0, 0, 0, gp["agoa_x"]/100], marker_color=C["gold"]))
-    fig.update_layout(title=f"{country}: Great-Power Economic Footprint", barmode="group",
-                      height=370, legend=dict(orientation="h", y=1.05, x=1, xanchor="right"), **LAYOUT)
+    fig.add_trace(go.Bar(name="China", x=cats, y=[gp["cn_loan"], gp["cn_fdi"], 0, 0],
+                         marker_color=C["warning"]))
+    fig.add_trace(go.Bar(name="EU", x=cats, y=[0, 0, gp["eu_aid"] / 100, 0],
+                         marker_color=C["accent"]))
+    fig.add_trace(go.Bar(name="US", x=cats, y=[0, 0, 0, gp["agoa_x"] / 100],
+                         marker_color=C["positive"]))
+    fig.update_layout(
+        title=dict(text=f"{country}: Strategic Economic Exposure by Power", font=dict(size=13)),
+        barmode="group",
+        height=370,
+        legend=dict(orientation="h", y=1.05, x=1, xanchor="right", font=dict(color=C["text"])),
+        xaxis=dict(tickfont=dict(color=C["text"])),
+        yaxis=dict(tickfont=dict(color=C["muted"])),
+        **LAYOUT,
+    )
     return fig
 
 
 def viz_threats_bar(df):
     fig = go.Figure()
-    fig.add_trace(go.Bar(x=df["Threat"], y=df["Africa"], name="Africa", marker_color=C["teal"]))
-    fig.add_trace(go.Bar(x=df["Threat"], y=df["EU"], name="EU", marker_color=C["rust"]))
+    fig.add_trace(go.Bar(x=df["Threat"], y=df["Africa"], name="Africa", marker_color=C["accent"]))
+    fig.add_trace(go.Bar(x=df["Threat"], y=df["EU"], name="EU", marker_color=C["negative"]))
     sqa = df["SQ_Africa"].iloc[0]; sqe = df["SQ_EU"].iloc[0]
-    fig.add_hline(y=sqa, line_dash="dash", line_color=C["teal"],
-                  annotation_text=f"Africa SQ: {sqa:.0f}", annotation_position="top left")
-    fig.add_hline(y=sqe, line_dash="dash", line_color=C["rust"],
-                  annotation_text=f"EU SQ: {sqe:.0f}", annotation_position="bottom right")
-    fig.update_layout(title="Threat Payoff Comparison", barmode="group", height=400,
-        legend=dict(orientation="h", y=1.05, x=1, xanchor="right"), **LAYOUT)
+    fig.add_hline(y=sqa, line_dash="dash", line_color=C["accent"],
+                  annotation_text=f"Africa status quo: {sqa:.0f}",
+                  annotation_font_color=C["muted"],
+                  annotation_position="top left")
+    fig.add_hline(y=sqe, line_dash="dash", line_color=C["negative"],
+                  annotation_text=f"EU status quo: {sqe:.0f}",
+                  annotation_font_color=C["muted"],
+                  annotation_position="bottom right")
+    fig.update_layout(
+        title=dict(text="Threat Payoff vs Status Quo", font=dict(size=13)),
+        barmode="group", height=400,
+        xaxis=dict(tickfont=dict(color=C["text"])),
+        yaxis=dict(tickfont=dict(color=C["muted"])),
+        legend=dict(orientation="h", y=1.05, x=1, xanchor="right", font=dict(color=C["text"])),
+        **LAYOUT,
+    )
     return fig
 
 
@@ -699,66 +977,118 @@ def viz_threats_bubble(df):
     df = df.copy()
     df["Improve"] = df["Africa"] - df["SQ_Africa"]
     df["Impact"] = df["SQ_EU"] - df["EU"]
-    cmap = {"Yes": C["teal"], "No": C["rust"], "Partially": C["gold"]}
+    cmap = {"Yes": C["positive"], "No": C["negative"], "Partially": C["warning"]}
     fig = go.Figure(go.Scatter(
         x=df["Improve"], y=df["Impact"], mode="markers+text",
-        marker=dict(size=df["Score"] * 50 + 12, color=[cmap.get(c, C["muted"]) for c in df["Credible"]],
-                    line=dict(width=1, color="#fff"), opacity=0.85),
-        text=df["Threat"], textposition="top center", textfont=dict(size=9),
-        hovertemplate="<b>%{text}</b><br>Improve: %{x:.1f}<br>EU Impact: %{y:.1f}<extra></extra>",
+        marker=dict(size=df["Score"] * 50 + 14,
+                    color=[cmap.get(c, C["muted"]) for c in df["Credible"]],
+                    line=dict(width=1, color=C["border"]), opacity=0.85),
+        text=df["Threat"], textposition="top center",
+        textfont=dict(size=9, color=C["text"]),
+        hovertemplate="<b>%{text}</b><br>Africa improvement: %{x:.1f}<br>EU impact: %{y:.1f}<extra></extra>",
         showlegend=False))
-    fig.add_vline(x=0, line_dash="dot", line_color="#999")
-    fig.add_hline(y=0, line_dash="dot", line_color="#999")
-    fig.update_layout(title="Threat Credibility Map", height=400,
-        xaxis_title="Africa Payoff Improvement over SQ",
-        yaxis_title="EU Payoff Worsening (higher = more pressure)", **LAYOUT)
+    fig.add_vline(x=0, line_dash="dot", line_color=C["muted"])
+    fig.add_hline(y=0, line_dash="dot", line_color=C["muted"])
+    fig.update_layout(
+        title=dict(text="Threat Credibility Map (bubble size = credibility score)", font=dict(size=13)),
+        height=420,
+        xaxis_title="Africa Payoff Improvement over Status Quo",
+        yaxis_title="EU Payoff Worsening (pressure applied)",
+        xaxis=dict(tickfont=dict(color=C["muted"])),
+        yaxis=dict(tickfont=dict(color=C["muted"])),
+        **LAYOUT,
+    )
     return fig
 
 
 def viz_sens_line(df, name):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df["value"], y=df["Africa"], mode="lines+markers",
-        name="Africa", line=dict(color=C["teal"], width=2), marker=dict(size=5)))
+        name="Africa", line=dict(color=C["accent"], width=2), marker=dict(size=5)))
     fig.add_trace(go.Scatter(x=df["value"], y=df["EU"], mode="lines+markers",
-        name="EU", line=dict(color=C["rust"], width=2), marker=dict(size=5)))
+        name="EU", line=dict(color=C["negative"], width=2), marker=dict(size=5)))
     fig.add_trace(go.Scatter(x=df["value"], y=df["AfCFTA"], mode="lines+markers",
-        name="AfCFTA", line=dict(color=C["gold"], width=2), marker=dict(size=5)))
-    fig.update_layout(title=f"Sensitivity: {name}", xaxis_title=name,
-        yaxis_title="Equilibrium Payoff", height=400,
-        legend=dict(orientation="h", y=1.05, x=1, xanchor="right"), **LAYOUT)
+        name="AfCFTA", line=dict(color=C["warning"], width=2), marker=dict(size=5)))
+    fig.add_hline(y=50, line_dash="dot", line_color=C["muted"],
+                  annotation_text="Neutral (50)", annotation_font_color=C["muted"])
+    fig.update_layout(
+        title=dict(text=f"Parameter Sweep: {name}", font=dict(size=13)),
+        xaxis_title=name, yaxis_title="Equilibrium Payoff",
+        height=400,
+        xaxis=dict(tickfont=dict(color=C["muted"])),
+        yaxis=dict(tickfont=dict(color=C["muted"])),
+        legend=dict(orientation="h", y=1.05, x=1, xanchor="right", font=dict(color=C["text"])),
+        **LAYOUT,
+    )
     return fig
 
 
-def viz_sens_heat(df, a1, a2):
+def viz_sens_heat(df, a1, a2, label1=None, label2=None):
     piv = df.pivot_table(index=a2, columns=a1, values="Africa", aggfunc="mean")
+    lbl1 = label1 or a1
+    lbl2 = label2 or a2
     fig = go.Figure(go.Heatmap(z=piv.values,
         x=[f"{v:.2f}" for v in piv.columns], y=[f"{v:.2f}" for v in piv.index],
-        colorscale=[[0, C["rust"]], [0.5, C["paper"]], [1, C["teal"]]],
-        colorbar=dict(title="Africa Payoff"),
-        hovertemplate=f"{a1}: %{{x}}<br>{a2}: %{{y}}<br>Payoff: %{{z:.1f}}<extra></extra>"))
-    fig.update_layout(title=f"Africa Payoff: {a1} vs {a2}", xaxis_title=a1, yaxis_title=a2,
-                      height=440, **LAYOUT)
+        colorscale=[[0, C["negative"]], [0.5, C["border"]], [1, C["accent"]]],
+        colorbar=dict(title=dict(text="Africa Payoff", font=dict(color=C["text"])),
+                      tickfont=dict(color=C["muted"])),
+        hovertemplate=f"{lbl1}: %{{x}}<br>{lbl2}: %{{y}}<br>Payoff: %{{z:.1f}}<extra></extra>"))
+    fig.update_layout(
+        title=dict(text=f"Africa Payoff Surface: {lbl1} × {lbl2}", font=dict(size=13)),
+        xaxis_title=lbl1, yaxis_title=lbl2,
+        xaxis=dict(tickfont=dict(color=C["muted"])),
+        yaxis=dict(tickfont=dict(color=C["muted"])),
+        height=440,
+        **LAYOUT,
+    )
     return fig
 
 
 def viz_sequence(df, country):
-    cmap = {"Phase 1 (Immediate)": C["teal"], "Phase 2 (Medium-term)": C["gold"], "Phase 3 (Deferred)": C["rust"]}
-    fig = go.Figure(go.Bar(y=df["Sector"], x=df["Net"], orientation="h",
+    cmap = {
+        "Phase 1 (Immediate)": C["positive"],
+        "Phase 2 (Medium-term)": C["warning"],
+        "Phase 3 (Deferred)": C["negative"],
+    }
+    fig = go.Figure(go.Bar(
+        y=df["Sector"], x=df["Net"], orientation="h",
         marker_color=[cmap.get(p, C["muted"]) for p in df["Phase"]],
-        text=[f"{v:.1f}" for v in df["Net"]], textposition="outside"))
-    fig.update_layout(title=f"{country}: Optimal Sector Concession Sequence",
-                      xaxis_title="Net Benefit Score", height=370, **LAYOUT)
+        text=[f"{v:.1f}" for v in df["Net"]],
+        textposition="outside",
+        textfont=dict(color=C["text"]),
+    ))
+    fig.update_layout(
+        title=dict(text=f"{country}: Sector Concession Sequencing", font=dict(size=13)),
+        xaxis_title="Net Benefit Score",
+        xaxis=dict(tickfont=dict(color=C["muted"])),
+        yaxis=dict(tickfont=dict(color=C["text"])),
+        height=380,
+        margin=dict(l=140, r=80, t=60, b=50),
+        **{k: v for k, v in LAYOUT.items() if k != "margin"},
+    )
     return fig
 
 
 def viz_bpi_bar(bpi_dict):
     items = sorted(bpi_dict.items(), key=lambda x: x[1]["BPI"])
-    fig = go.Figure(go.Bar(y=[i[0] for i in items], x=[i[1]["BPI"] for i in items],
-        orientation="h", marker_color=[C["teal"] if i[1]["BPI"] >= 50 else C["rust"] for i in items],
-        text=[f"{i[1]['BPI']:.1f}" for i in items], textposition="outside"))
-    fig.add_vline(x=50, line_dash="dash", line_color="#999", annotation_text="Neutral")
-    fig.update_layout(title="Bargaining Power Index Comparison", xaxis_title="BPI (0-100)",
-        xaxis=dict(range=[0, 100]), height=max(300, len(items) * 55), **LAYOUT)
+    fig = go.Figure(go.Bar(
+        y=[i[0] for i in items], x=[i[1]["BPI"] for i in items],
+        orientation="h",
+        marker_color=[C["positive"] if i[1]["BPI"] >= 50 else C["negative"] for i in items],
+        text=[f"{i[1]['BPI']:.1f}" for i in items],
+        textposition="outside",
+        textfont=dict(color=C["text"]),
+    ))
+    fig.add_vline(x=50, line_dash="dash", line_color=C["muted"],
+                  annotation_text="Neutral (50)", annotation_font_color=C["muted"])
+    fig.update_layout(
+        title=dict(text="Baseline Negotiating Position: Peer Comparison", font=dict(size=13)),
+        xaxis_title="BPI (0–100)",
+        xaxis=dict(range=[0, 110], tickfont=dict(color=C["muted"])),
+        yaxis=dict(tickfont=dict(color=C["text"])),
+        height=max(320, len(items) * 55),
+        **LAYOUT,
+    )
     return fig
 
 
@@ -767,32 +1097,39 @@ def viz_bpi_bar(bpi_dict):
 # ══════════════════════════════════════════════════════════════
 
 with st.sidebar:
-    st.markdown("## 🌍 Economic Partnership Agreements Bargaining Engine")
-    st.caption("Sequential bargaining engine for African trade negotiators.")
+    st.markdown("### EPA Bargaining Engine")
+    st.markdown(
+        '<span class="brand-insignia">Designing Decision Systems</span>',
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
-    st.markdown("### Country & Peers")
+    st.markdown("#### Analysis Subject")
     country = st.selectbox("Primary Country", COUNTRIES, index=0)
-    peers = st.multiselect("Comparison Countries",
-        [c for c in COUNTRIES if c != country], default=["Kenya", "Nigeria"])
+    # Clean peers default: remove primary country if it was selected
+    _default_peers = [c for c in ["Kenya", "Nigeria"] if c != country]
+    peers = st.multiselect(
+        "Comparison Countries",
+        [c for c in COUNTRIES if c != country],
+        default=_default_peers,
+    )
 
     st.markdown("---")
-    st.markdown("### Game Parameters")
 
-    with st.expander("Discount Factors (Patience)"):
-        d_af = st.slider("African State δ", 0.50, 0.99, 0.85, 0.01,
-            help="Higher = more patient. Default 0.85 reflects moderate time pressure.")
+    with st.expander("Discount Factors"):
+        d_af = st.slider("Africa δ (patience)", 0.50, 0.99, 0.85, 0.01,
+            help="Higher = more patient negotiator. Default 0.85 reflects moderate time pressure.")
         d_eu = st.slider("EU δ", 0.50, 0.99, 0.92, 0.01,
-            help="EU is typically more patient (institutional continuity). Default 0.92.")
+            help="EU institutional continuity implies higher patience. Default 0.92.")
         d_ac = st.slider("AfCFTA Council δ", 0.50, 0.99, 0.80, 0.01)
 
-    with st.expander("Behavioural Perturbations"):
+    with st.expander("Behavioural Parameters"):
         sq_bias = st.slider("Status-Quo Bias", 0.0, 0.50, 0.15, 0.01,
-            help="Samuelson & Zeckhauser (1988). Range 0.10-0.30.")
-        loss_av = st.slider("Loss Aversion (λ)", 1.0, 4.0, 2.25, 0.05,
-            help="Kahneman & Tversky (1979). Literature: 1.5-2.5.")
+            help="Samuelson & Zeckhauser (1988). Empirical range 0.10–0.30.")
+        loss_av = st.slider("Loss Aversion λ", 1.0, 4.0, 2.25, 0.05,
+            help="Kahneman & Tversky (1979). Literature consensus: 1.5–2.5.")
         ambig = st.slider("Ambiguity Premium", 0.0, 0.30, 0.10, 0.01,
-            help="Ellsberg (1961). Discount for uncertain AfCFTA outcomes.")
+            help="Ellsberg (1961). Discount applied to uncertain AfCFTA outcomes.")
 
     with st.expander("EPA Lock-in Costs"):
         epa_sunk = st.slider("EPA Sunk Cost", 0.0, 0.50, 0.20, 0.01)
@@ -801,7 +1138,7 @@ with st.sidebar:
         epa_still = st.slider("Standstill Constraint", 0.0, 0.20, 0.08, 0.01)
 
     with st.expander("Great-Power Shadow"):
-        cn_infra = st.slider("Chinese Infra Offer", 0.0, 0.50, 0.20, 0.01)
+        cn_infra = st.slider("Chinese Infrastructure Offer", 0.0, 0.50, 0.20, 0.01)
         cn_debt = st.slider("Chinese Debt Constraint", 0.0, 0.30, 0.10, 0.01)
         us_agoa = st.slider("AGOA Withdrawal Risk", 0.0, 0.20, 0.08, 0.01)
         eu_cond = st.slider("EU Aid Conditionality", 0.0, 0.30, 0.12, 0.01)
@@ -811,11 +1148,10 @@ with st.sidebar:
         ac_ind = st.slider("Industrialisation Bonus", 0.0, 0.30, 0.15, 0.01)
 
     depth = st.slider("Game Depth (rounds)", 1, 3, 2,
-        help="Alternating-move rounds. Depth 2 ≈ 750 nodes. Depth 3 is slower.")
+        help="Alternating-move rounds. Depth 2 ≈ 750 nodes. Depth 3 is computationally intensive.")
 
     st.markdown("---")
-    st.markdown("### Navigation")
-    page = st.radio("Section", [
+    page = st.radio("Navigate", [
         "Dashboard", "Game Tree & Equilibrium", "Threat Points",
         "Sensitivity Analysis", "Concession Sequencing",
         "Comparative Analysis", "Data Explorer", "Methodology",
@@ -823,9 +1159,10 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown(
-        '<p style="font-size:0.68rem;opacity:0.55;">'
+        '<p style="font-size:0.68rem;color:#8B949E;">'
         'Data: UN Comtrade · EU Access2Markets · AfCFTA e-Tariff Book · '
-        'World Bank WGI · AidData<br>v1.0 · Mar 2026</p>',
+        'World Bank WGI · AidData<br>'
+        'Reference period: 2022–2024 · v1.0</p>',
         unsafe_allow_html=True,
     )
 
@@ -853,192 +1190,372 @@ par = Params(
 
 # ──────────── DASHBOARD ────────────
 if page == "Dashboard":
-    st.markdown(f"# {country}: Bargaining Asymmetry Dashboard")
-    st.caption("Pre-negotiation intelligence for AfCFTA-EPA strategy. Adjust parameters in the sidebar.")
+    st.markdown(f"# Strategic Brief: {country}")
+    st.caption(
+        "Pre-negotiation positioning analysis. Adjust scenario parameters in the sidebar "
+        "to model alternative structural assumptions."
+    )
 
     bp = bpi(td, wgi, gp, par)
+
+    # Compute equilibrium (depth=1 for speed) to power briefing block
+    _btree = build_tree(par, td, wgi, 1)
+    _, _eq_pay = solve(_btree)
+    _tdf = threat_points(par, td, wgi)
+    briefing_block(country, bp, _eq_pay, _tdf, td, par)
+
+    # ── Key metrics ──
     c1, c2, c3, c4 = st.columns(4)
-    with c1: metric_card("Bargaining Power Index", f"{bp['BPI']:.0f} / 100")
-    with c2: metric_card("GDP (USD bn)", f"${PROFILES[country]['gdp']:.0f}B")
-    with c3: metric_card("EU Trade Dependence", f"{(td['x_eu']+td['m_eu'])/2:.1f}%")
-    with c4: metric_card("Negotiation Capacity", f"{wgi['nci']:.2f}")
+    with c1:
+        metric_card("Baseline Negotiating Position", f"{bp['BPI']:.1f} / 100")
+    with c2:
+        metric_card("GDP (USD bn)", f"${PROFILES[country]['gdp']:.1f}bn")
+    with c3:
+        metric_card("EU Trade Dependence", f"{(td['x_eu'] + td['m_eu']) / 2:.1f}%")
+    with c4:
+        metric_card("Negotiation Capacity Index", f"{wgi['nci']:.2f}")
 
     st.markdown("---")
-    l, r = st.columns(2)
-    with l: st.plotly_chart(viz_radar(bp, country), use_container_width=True)
-    with r: st.plotly_chart(viz_sunburst(td, country), use_container_width=True)
 
+    # ── Power components & trade structure ──
+    l, r = st.columns(2)
+    with l:
+        st.plotly_chart(viz_radar(bp, country), use_container_width=True)
+    with r:
+        st.plotly_chart(viz_sunburst(td, country), use_container_width=True)
+
+    # ── EPA liberalisation schedule ──
     edf = epa_schedule(country)
     if edf["pct_liberalised"].sum() > 0:
         st.plotly_chart(viz_epa(edf, country), use_container_width=True)
     else:
-        st.info(f"{country} has no active EPA liberalisation schedule.")
+        st.markdown(
+            f'<div class="analyst-note">'
+            f'<strong>No active EPA liberalisation schedule:</strong> {country} has not entered '
+            f'provisional application of an EPA. This reduces immediate fiscal exposure but also '
+            f'limits access to EU adjustment support mechanisms.'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
 
+    # ── Strategic economic exposure ──
     st.plotly_chart(viz_gp(gp, country), use_container_width=True)
 
+    # ── Full country profile ──
     with st.expander("Full Country Profile"):
         rows = [
-            ("Economy", "GDP (USD bn)", PROFILES[country]["gdp"]),
-            ("Economy", "Population (mn)", PROFILES[country]["pop"]),
+            ("Economy", "GDP (USD bn)", str(PROFILES[country]["gdp"])),
+            ("Economy", "Population (mn)", str(PROFILES[country]["pop"])),
             ("Economy", "Trade Openness", f"{td['openness']:.0%}"),
-            ("Trade", "Exports to EU (%)", td["x_eu"]),
-            ("Trade", "Imports from EU (%)", td["m_eu"]),
-            ("Trade", "Exports to China (%)", td["x_cn"]),
-            ("Trade", "Imports from China (%)", td["m_cn"]),
-            ("Trade", "Exports to Africa (%)", td["x_af"]),
-            ("Governance", "Govt Effectiveness (WGI)", wgi["ge"]),
-            ("Governance", "Regulatory Quality (WGI)", wgi["rq"]),
-            ("Governance", "Neg. Capacity Index", wgi["nci"]),
-            ("Great Powers", "Chinese Loans (USD bn)", gp["cn_loan"]),
-            ("Great Powers", "Debt to China (% GDP)", gp["cn_debt_gdp"]),
-            ("Great Powers", "EU Dev. Aid (USD mn)", gp["eu_aid"]),
-            ("EPA", "Arrangement", PROFILES[country]["epa"]),
+            ("Trade", "Exports to EU (%)", str(td["x_eu"])),
+            ("Trade", "Imports from EU (%)", str(td["m_eu"])),
+            ("Trade", "Exports to China (%)", str(td["x_cn"])),
+            ("Trade", "Imports from China (%)", str(td["m_cn"])),
+            ("Trade", "Exports to Africa (%)", str(td["x_af"])),
+            ("Governance", "Govt Effectiveness (WGI)", str(wgi["ge"])),
+            ("Governance", "Regulatory Quality (WGI)", str(wgi["rq"])),
+            ("Governance", "Negotiation Capacity Index", str(wgi["nci"])),
+            ("Great Powers", "Chinese Loans (USD bn)", str(gp["cn_loan"])),
+            ("Great Powers", "Chinese Debt (% GDP)", str(gp["cn_debt_gdp"])),
+            ("Great Powers", "EU Dev. Aid (USD mn)", str(gp["eu_aid"])),
+            ("EPA", "Arrangement", str(PROFILES[country]["epa"])),
             ("AfCFTA", "Schedule Submitted", "Yes" if PROFILES[country]["afcfta_sched"] else "No"),
         ]
-        st.dataframe(pd.DataFrame(rows, columns=["Category", "Indicator", "Value"]),
-                     use_container_width=True, hide_index=True)
+        st.dataframe(
+            pd.DataFrame(rows, columns=["Category", "Indicator", "Value"]),
+            use_container_width=True, hide_index=True,
+        )
 
-    st.markdown('<p class="source-note">Sources: UN Comtrade 2022 · EU Access2Markets · '
-                'World Bank WGI 2022 · AidData · USTR AGOA</p>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="source-note">Data: UN Comtrade 2022 · EU Access2Markets · '
+        'World Bank WGI 2022 · AidData · USTR AGOA · AfCFTA e-Tariff Book</p>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────── GAME TREE ────────────
 elif page == "Game Tree & Equilibrium":
-    st.markdown(f"# {country}: Sequential Game Tree")
-    st.caption("Extensive-form game solved via backward induction (Subgame Perfect Equilibrium).")
+    st.markdown(f"# Current Equilibrium: {country}")
+    st.caption(
+        "Extensive-form sequential bargaining game solved via backward induction. "
+        "The equilibrium path represents the Subgame Perfect Equilibrium (SPE) — "
+        "the unique strategy profile that is optimal at every decision node."
+    )
 
-    with st.spinner("Building & solving game tree…"):
+    with st.spinner("Constructing and solving game tree…"):
         tree = build_tree(par, td, wgi, depth)
         eq_path, eq_pay = solve(tree)
 
-    st.markdown("### Equilibrium Outcome")
-    c1, c2, c3 = st.columns(3)
-    with c1: metric_card("Africa Payoff", f"{eq_pay['africa']:.1f}")
-    with c2: metric_card("EU Payoff", f"{eq_pay['eu']:.1f}")
-    with c3: metric_card("AfCFTA Payoff", f"{eq_pay['afcfta']:.1f}")
+    # ── Analytical summary ──
+    af_act_nodes = [tree[nid] for nid in eq_path if tree[nid].action in AFRICA_ACTS]
+    dom_action = LABELS.get(af_act_nodes[0].action, "—") if af_act_nodes else "—"
+    analyst_note(
+        f"<strong>Equilibrium recommendation:</strong> The model resolves to "
+        f"<strong>{dom_action}</strong> as Africa's dominant opening strategy under "
+        f"current parameters. EU payoff ({eq_pay['eu']:.1f}) "
+        f"{'exceeds' if eq_pay['eu'] > eq_pay['africa'] else 'trails'} Africa payoff "
+        f"({eq_pay['africa']:.1f}), indicating "
+        f"{'structural EU advantage' if eq_pay['eu'] > eq_pay['africa'] else 'relative Africa leverage'} "
+        f"under this configuration.",
+        variant="",
+    )
 
-    st.markdown("### Equilibrium Path")
+    st.markdown("#### Equilibrium Payoffs")
+    c1, c2, c3 = st.columns(3)
+    with c1: metric_card("Africa Equilibrium Payoff", f"{eq_pay['africa']:.1f}")
+    with c2: metric_card("EU Equilibrium Payoff", f"{eq_pay['eu']:.1f}")
+    with c3: metric_card("AfCFTA Council Payoff", f"{eq_pay['afcfta']:.1f}")
+
+    st.markdown("#### Equilibrium Path")
     eq_rows = []
     for nid in eq_path:
         n = tree[nid]
         if n.action != "START":
-            eq_rows.append(dict(Round=n.rnd, Player=n.player, Action=LABELS.get(n.action, n.action)))
+            # Derive actual acting player from the action type, not the node's 'next player' field
+            actual_player = "EU" if n.action in EU_ACTS else ("Africa" if n.action in AFRICA_ACTS else n.player)
+            eq_rows.append(dict(Round=n.rnd, Player=actual_player, Action=LABELS.get(n.action, n.action)))
     if eq_rows:
         st.dataframe(pd.DataFrame(eq_rows), use_container_width=True, hide_index=True)
 
-    st.markdown("### Interactive Game Tree")
-    st.caption("Teal = Africa nodes · Rust = EU nodes · Diamonds = terminal · Bold path = equilibrium.")
+    st.markdown("#### Extensive-Form Game Tree")
+    st.caption(
+        "Blue nodes = Africa decision points · Red nodes = EU decision points · "
+        "Diamond nodes = terminal payoffs · Bold path = equilibrium."
+    )
     st.plotly_chart(viz_game_tree(tree), use_container_width=True)
 
-    with st.expander("Game Statistics"):
-        total = len(tree); terms = sum(1 for n in tree.values() if n.terminal)
-        st.markdown(f"- Total nodes: **{total}**  \n- Terminal: **{terms}**  \n- Depth: **{depth}** rounds")
+    with st.expander("Model Statistics"):
+        total = len(tree)
+        terms = sum(1 for n in tree.values() if n.terminal)
+        st.markdown(
+            f"- Total nodes: **{total}**\n"
+            f"- Terminal nodes: **{terms}**\n"
+            f"- Game depth: **{depth}** alternating rounds\n"
+            f"- Solution concept: Subgame Perfect Equilibrium (backward induction)"
+        )
 
-    st.markdown('<p class="source-note">Model: Selten (1965) backward induction; '
-                'Kahneman & Tversky (1979) prospect theory; '
-                'Samuelson & Zeckhauser (1988) status-quo bias.</p>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="source-note">Model: Selten (1965) backward induction · '
+        'Kahneman & Tversky (1979) prospect theory · '
+        'Samuelson & Zeckhauser (1988) status-quo bias</p>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────── THREAT POINTS ────────────
 elif page == "Threat Points":
-    st.markdown(f"# {country}: Credible Threat Analysis")
-    st.caption("A threat is credible if executing it beats backing down and worsens the counterparty.")
+    st.markdown(f"# Threat Credibility Assessment: {country}")
+    st.caption(
+        "A threat is analytically credible when executing it produces a better payoff for Africa "
+        "than backing down, and simultaneously worsens the EU's payoff below its status-quo position."
+    )
 
     tdf = threat_points(par, td, wgi)
+
+    # Summary before charts
+    credible_threats = tdf[tdf["Credible"] == "Yes"]
+    partial_threats = tdf[tdf["Credible"] == "Partially"]
+    if not credible_threats.empty:
+        analyst_note(
+            f"<strong>{len(credible_threats)} fully credible threat(s)</strong> identified under current parameters: "
+            + ", ".join(f"<em>{r['Threat']}</em>" for _, r in credible_threats.iterrows())
+            + ". These represent genuine strategic leverage points.",
+            variant="positive",
+        )
+    elif not partial_threats.empty:
+        analyst_note(
+            f"No fully credible threats detected. "
+            f"<strong>{len(partial_threats)} partially credible threat(s)</strong>: "
+            + ", ".join(f"<em>{r['Threat']}</em>" for _, r in partial_threats.iterrows())
+            + ". These may still function as negotiating signals but lack full commitment power.",
+            variant="warning",
+        )
+    else:
+        analyst_note(
+            "No credible or partially credible threats detected under current parameters. "
+            "This indicates a structurally weak bargaining position. "
+            "Improving governance capacity (NCI) or Chinese infrastructure availability "
+            "would strengthen threat credibility.",
+            variant="negative",
+        )
+
     l, r = st.columns(2)
-    with l: st.plotly_chart(viz_threats_bar(tdf), use_container_width=True)
-    with r: st.plotly_chart(viz_threats_bubble(tdf), use_container_width=True)
+    with l:
+        st.plotly_chart(viz_threats_bar(tdf), use_container_width=True)
+    with r:
+        st.plotly_chart(viz_threats_bubble(tdf), use_container_width=True)
 
-    st.markdown("### Threat Detail")
-    st.dataframe(tdf[["Threat", "Africa", "EU", "Credible", "Score", "Implication"]],
-                 use_container_width=True, hide_index=True)
+    st.markdown("#### Threat Detail")
+    st.dataframe(
+        tdf[["Threat", "Africa", "EU", "Credible", "Score", "Implication"]],
+        use_container_width=True, hide_index=True,
+    )
 
-    st.markdown("### Red-Line Identification")
-    for _, row in tdf[tdf["Credible"].isin(["Yes", "Partially"])].iterrows():
-        icon = "🟢" if row["Credible"] == "Yes" else "🟡"
-        st.markdown(f"{icon} **{row['Threat']}** — {row['Implication']}")
+    st.markdown("#### Strategic Implications")
+    for _, row in tdf[tdf["Credible"] == "Yes"].iterrows():
+        analyst_note(f"<strong>[Credible]</strong> {row['Threat']}: {row['Implication']}", variant="positive")
+    for _, row in tdf[tdf["Credible"] == "Partially"].iterrows():
+        analyst_note(f"<strong>[Partial]</strong> {row['Threat']}: {row['Implication']}", variant="warning")
     for _, row in tdf[tdf["Credible"] == "No"].iterrows():
-        st.markdown(f"🔴 **{row['Threat']}** — {row['Implication']}")
+        analyst_note(f"<strong>[Not credible]</strong> {row['Threat']}: {row['Implication']}")
 
-    # CSV export
     csv = tdf.to_csv(index=False).encode()
-    st.download_button("Download threat analysis (CSV)", csv,
-                       f"threats_{country.replace(' ','_')}_{datetime.now():%Y%m%d}.csv", "text/csv")
+    st.download_button(
+        "Export threat analysis (CSV)", csv,
+        f"threat_assessment_{country.replace(' ', '_')}_{datetime.now():%Y%m%d}.csv",
+        "text/csv",
+    )
 
-    st.markdown('<p class="source-note">Framework: Schelling (1960) credible commitment; '
-                'Nash (1953) outside-option bargaining.</p>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="source-note">Framework: Schelling (1960) credible commitment · '
+        'Nash (1953) outside-option bargaining</p>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────── SENSITIVITY ────────────
 elif page == "Sensitivity Analysis":
-    st.markdown(f"# {country}: Sensitivity Analysis")
-    st.caption("How equilibrium outcomes shift as parameters change.")
+    st.markdown(f"# Recommendation Fragility: {country}")
+    st.caption(
+        "Measures how the equilibrium recommendation changes as individual parameters vary. "
+        "A flat-line result is a substantive finding — it indicates the recommendation is robust "
+        "to changes in that parameter under the current configuration."
+    )
 
     PMAP = {
-        "Chinese Infra Offer": ("cn_infra", 0.0, 0.50),
+        "Chinese Infrastructure Offer": ("cn_infra", 0.0, 0.50),
         "Status-Quo Bias": ("sq_bias", 0.0, 0.50),
         "Loss Aversion (λ)": ("loss_av", 1.0, 4.0),
         "MFN Clause Penalty": ("epa_mfn", 0.0, 0.30),
-        "AfCFTA Market Gain": ("ac_mkt", 0.10, 0.60),
+        "AfCFTA Market Access Gain": ("ac_mkt", 0.10, 0.60),
         "EU Aid Conditionality": ("eu_cond", 0.0, 0.30),
-        "Africa δ": ("d_af", 0.50, 0.99),
+        "Africa Discount Factor (δ)": ("d_af", 0.50, 0.99),
         "Ambiguity Premium": ("ambig", 0.0, 0.30),
     }
 
-    st.markdown("### Single-Parameter Sweep")
-    sel = st.selectbox("Parameter", list(PMAP.keys()))
+    st.markdown("#### Single-Parameter Sweep")
+    sel = st.selectbox("Select parameter to sweep", list(PMAP.keys()))
     attr, lo, hi = PMAP[sel]
-    with st.spinner("Sweeping…"):
+    with st.spinner("Computing sweep…"):
         sdf = sensitivity_1d(par, td, wgi, attr, np.linspace(lo, hi, 20))
     st.plotly_chart(viz_sens_line(sdf, sel), use_container_width=True)
 
+    # Robustness annotation
+    af_range = sdf["Africa"].max() - sdf["Africa"].min()
+    if af_range < 2.0:
+        analyst_note(
+            f"<strong>Robust finding:</strong> Africa's equilibrium payoff varies by only "
+            f"{af_range:.2f} points across the full range of <em>{sel}</em>. "
+            "The recommendation does not depend materially on this parameter under the current configuration. "
+            "This is analytically informative — not a display error.",
+            variant="positive",
+        )
+    else:
+        # Flip condition: does payoff cross 50?
+        neutral_cross = ((sdf["Africa"] < 50) & (sdf["Africa"].shift(-1) >= 50)) | \
+                        ((sdf["Africa"] >= 50) & (sdf["Africa"].shift(-1) < 50))
+        if neutral_cross.any():
+            cross_idx = sdf[neutral_cross].index[0]
+            cross_val = sdf.loc[cross_idx, "value"]
+            analyst_note(
+                f"<strong>Flip condition detected:</strong> Africa's equilibrium payoff crosses the "
+                f"neutral threshold (50) when <em>{sel}</em> is approximately "
+                f"<strong>{cross_val:.3f}</strong>. The dominant strategy recommendation changes "
+                "near this value — treat this as a strategic sensitivity boundary.",
+                variant="warning",
+            )
+        else:
+            analyst_note(
+                f"No neutral-threshold crossing detected within the swept range of <em>{sel}</em> "
+                f"(payoff range: {sdf['Africa'].min():.1f}–{sdf['Africa'].max():.1f}). "
+                "The recommendation direction is stable across this parameter range.",
+            )
+
     st.markdown("---")
-    st.markdown("### Two-Parameter Heatmap")
+    st.markdown("#### Two-Parameter Surface")
+    st.caption(
+        "Shows Africa's equilibrium payoff across the joint space of two parameters. "
+        "Darker blue = stronger Africa position; darker red = weaker."
+    )
     cl, cr = st.columns(2)
-    with cl: p1n = st.selectbox("X-axis", list(PMAP.keys()), 0, key="px")
-    with cr: p2n = st.selectbox("Y-axis", [p for p in PMAP if p != p1n], 0, key="py")
-    a1, lo1, hi1 = PMAP[p1n]; a2, lo2, hi2 = PMAP[p2n]
+    with cl:
+        p1n = st.selectbox("X-axis parameter", list(PMAP.keys()), 0, key="px")
+    with cr:
+        p2n = st.selectbox("Y-axis parameter", [p for p in PMAP if p != p1n], 0, key="py")
+    a1, lo1, hi1 = PMAP[p1n]
+    a2, lo2, hi2 = PMAP[p2n]
 
-    with st.spinner("Computing surface…"):
+    with st.spinner("Computing parameter surface…"):
         mdf = sensitivity_2d(par, td, wgi, a1, np.linspace(lo1, hi1, 10), a2, np.linspace(lo2, hi2, 10))
-    st.plotly_chart(viz_sens_heat(mdf, a1, a2), use_container_width=True)
+    st.plotly_chart(viz_sens_heat(mdf, a1, a2, label1=p1n, label2=p2n), use_container_width=True)
 
-    st.markdown('<p class="source-note">Methodology: Saltelli et al. (2008) global sensitivity analysis.</p>',
-                unsafe_allow_html=True)
+    st.markdown(
+        '<p class="source-note">Methodology: Saltelli et al. (2008) global sensitivity analysis · '
+        'Parameters swept at 20 points (1D) and 10×10 grid (2D)</p>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────── CONCESSION SEQUENCING ────────────
 elif page == "Concession Sequencing":
-    st.markdown(f"# {country}: Optimal Concession Sequence")
-    st.caption("Optimal order of AfCFTA tariff concessions, balancing gains vs EPA constraints.")
+    st.markdown(f"# Sequencing Implications: {country}")
+    st.caption(
+        "Derives the optimal order for AfCFTA tariff concessions given current EPA constraints and "
+        "great-power dynamics. Phase allocation follows net benefit ranking — sectors with highest "
+        "AfCFTA gain relative to EPA cost and employment risk are sequenced first."
+    )
 
     sdf = optimal_sequence(par, td, wgi)
+
+    # Analytical summary
+    phase1 = sdf[sdf["Phase"] == "Phase 1 (Immediate)"]
+    if not phase1.empty:
+        top_sector = phase1.iloc[0]
+        analyst_note(
+            f"<strong>Recommended first-mover sector:</strong> <em>{top_sector['Sector']}</em> "
+            f"(net benefit score: {top_sector['Net']:.1f}). "
+            f"This sector offers the most favourable AfCFTA gain-to-EPA-cost ratio "
+            f"under current parameters and should anchor early concession offers.",
+            variant="positive",
+        )
+
     st.plotly_chart(viz_sequence(sdf, country), use_container_width=True)
 
-    st.markdown("### Sequencing Detail")
-    st.dataframe(sdf, use_container_width=True, hide_index=True)
+    st.markdown("#### Sequencing Detail")
+    display_sdf = sdf.rename(columns=COLUMN_LABELS)
+    st.dataframe(display_sdf, use_container_width=True, hide_index=True)
 
-    st.markdown("### AfCFTA Tariff Categories")
+    st.markdown("#### AfCFTA Tariff Structure")
     ac = _AFCFTA_CAT.get(country, dict(a=90, b=7, c=3, mfn=12))
     c1, c2, c3, c4 = st.columns(4)
-    with c1: metric_card("Cat A (Non-sensitive)", f"{ac['a']:.1f}%")
-    with c2: metric_card("Cat B (Sensitive)", f"{ac['b']:.1f}%")
-    with c3: metric_card("Cat C (Exclusion)", f"{ac['c']:.1f}%")
-    with c4: metric_card("Avg MFN Base Rate", f"{ac['mfn']:.1f}%")
+    with c1: metric_card("Category A — Non-sensitive", f"{ac['a']:.1f}%")
+    with c2: metric_card("Category B — Sensitive", f"{ac['b']:.1f}%")
+    with c3: metric_card("Category C — Exclusion List", f"{ac['c']:.1f}%")
+    with c4: metric_card("Average MFN Base Rate", f"{ac['mfn']:.1f}%")
 
     csv = sdf.to_csv(index=False).encode()
-    st.download_button("Download sequence (CSV)", csv,
-                       f"sequence_{country.replace(' ','_')}_{datetime.now():%Y%m%d}.csv", "text/csv")
+    st.download_button(
+        "Export sequencing analysis (CSV)", csv,
+        f"sequencing_{country.replace(' ', '_')}_{datetime.now():%Y%m%d}.csv",
+        "text/csv",
+    )
 
-    st.markdown('<p class="source-note">AfCFTA categories: Art. 7 Protocol on Trade in Goods — '
-                '90 % non-sensitive (5/10 yr), 7 % sensitive (10/13 yr), 3 % exclusion. '
-                'Source: AfCFTA e-Tariff Book.</p>', unsafe_allow_html=True)
+    st.markdown(
+        '<p class="source-note">AfCFTA categories per Art. 7, Protocol on Trade in Goods: '
+        '90% non-sensitive (5/10yr liberalisation), 7% sensitive (10/13yr), 3% exclusion list. '
+        'Source: AfCFTA e-Tariff Book</p>',
+        unsafe_allow_html=True,
+    )
 
 
 # ──────────── COMPARATIVE ────────────
 elif page == "Comparative Analysis":
-    st.markdown("# Cross-Country Comparative Analysis")
-    st.caption("Benchmark bargaining positions to identify coalition partners.")
+    st.markdown("# Peer Context & Coalition Readiness")
+    st.caption(
+        "Benchmarks the primary country's bargaining position against selected peers. "
+        "Identifies structural similarities that indicate viable coalition formation in "
+        "AfCFTA scheduling and EPA renegotiation contexts."
+    )
 
     all_c = [country] + peers
     bd = {}
@@ -1048,78 +1565,133 @@ elif page == "Comparative Analysis":
         bd[c] = bpi(_TRADE[c], _WGI[c], _GP[c], cp)
 
     st.plotly_chart(viz_bpi_bar(bd), use_container_width=True)
+    analyst_note(
+        "Colour encoding: <strong style='color:#3FB950'>green bars</strong> indicate BPI ≥ 50 "
+        "(stronger structural position relative to the EU); "
+        "<strong style='color:#F85149'>red bars</strong> indicate BPI &lt; 50 "
+        "(structurally weaker position). The threshold is analytical, not normative — "
+        "it reflects relative leverage within this model's parameter space.",
+    )
+
     st.plotly_chart(viz_radar_compare(bd), use_container_width=True)
 
-    st.markdown("### Comparison Table")
+    st.markdown("#### Country Comparison")
     rows = []
     for c in all_c:
         p = PROFILES[c]; t = _TRADE[c]; w = _WGI[c]; g = _GP[c]
-        rows.append(dict(Country=c, GDP=p["gdp"], EU_Export=t["x_eu"],
-            China_Import=t["m_cn"], Africa_Export=t["x_af"],
-            Neg_Capacity=w["nci"], CN_Debt_GDP=g["cn_debt_gdp"],
-            BPI=bd[c]["BPI"], EPA=p["epa"]))
+        rows.append(dict(
+            Country=c,
+            GDP=p["gdp"],
+            EU_Export=t["x_eu"],
+            China_Import=t["m_cn"],
+            Africa_Export=t["x_af"],
+            Neg_Capacity=w["nci"],
+            CN_Debt_GDP=g["cn_debt_gdp"],
+            BPI=bd[c]["BPI"],
+            EPA=p["epa"],
+        ))
     cdf = pd.DataFrame(rows).sort_values("BPI", ascending=False)
-    st.dataframe(cdf, use_container_width=True, hide_index=True)
+    display_cdf = cdf.rename(columns=COLUMN_LABELS)
+    st.dataframe(display_cdf, use_container_width=True, hide_index=True)
 
-    st.markdown("### Coalition Identification")
-    primary = bd[country]["BPI"]
-    close = sorted([(c, abs(bd[c]["BPI"] - primary)) for c in all_c if c != country], key=lambda x: x[1])
+    st.markdown("#### Coalition Readiness Assessment")
+    primary_bpi = bd[country]["BPI"]
+    close = sorted(
+        [(c, abs(bd[c]["BPI"] - primary_bpi)) for c in all_c if c != country],
+        key=lambda x: x[1],
+    )
     if close:
-        st.markdown(f"Closest coalition partner: **{close[0][0]}** (BPI gap: {close[0][1]:.1f})")
+        partner, gap = close[0]
+        if gap <= 5:
+            analyst_note(
+                f"<strong>Strong coalition candidate:</strong> {partner} (BPI gap: {gap:.1f}). "
+                "Countries within 5 BPI points share structural leverage constraints and are "
+                "viable partners for coordinated AfCFTA scheduling and joint EPA renegotiation.",
+                variant="positive",
+            )
+        elif gap <= 15:
+            analyst_note(
+                f"<strong>Moderate coalition candidate:</strong> {partner} (BPI gap: {gap:.1f}). "
+                "Some structural alignment exists. Coalition coordination is possible but "
+                "positions will require active harmonisation.",
+                variant="warning",
+            )
+        else:
+            analyst_note(
+                f"Closest peer is {partner} (BPI gap: {gap:.1f}). "
+                "The structural gap is significant — formal coalition formation is unlikely "
+                "without prior convergence on AfCFTA implementation priorities.",
+            )
 
     csv = cdf.to_csv(index=False).encode()
-    st.download_button("Download comparison (CSV)", csv,
-                       f"comparison_{datetime.now():%Y%m%d}.csv", "text/csv")
+    st.download_button(
+        "Export comparison data (CSV)", csv,
+        f"peer_comparison_{datetime.now():%Y%m%d}.csv",
+        "text/csv",
+    )
 
 
 # ──────────── DATA EXPLORER ────────────
 elif page == "Data Explorer":
-    st.markdown("# Data Explorer")
-    st.caption("Browse and export all underlying datasets.")
+    st.markdown("# Underlying Data")
+    st.caption(
+        "Browse and export the source datasets underpinning the bargaining analysis. "
+        "All data is embedded from public sources (2022–2024 reference period)."
+    )
 
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "Profiles", "Trade Dependence", "WGI Governance", "Great Powers", "Sectors"])
+        "Country Profiles", "Trade Dependence", "Governance (WGI)", "Great-Power Exposure", "Sector Analysis"
+    ])
 
     with tab1:
         df = pd.DataFrame([dict(Country=c, **PROFILES[c]) for c in COUNTRIES])
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df.rename(columns=COLUMN_LABELS), use_container_width=True, hide_index=True)
 
     with tab2:
         df = pd.DataFrame([dict(Country=c, **_TRADE[c]) for c in COUNTRIES])
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df.rename(columns=COLUMN_LABELS), use_container_width=True, hide_index=True)
 
     with tab3:
         df = pd.DataFrame([dict(Country=c, **_WGI[c]) for c in COUNTRIES])
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df.rename(columns=COLUMN_LABELS), use_container_width=True, hide_index=True)
 
     with tab4:
         df = pd.DataFrame([dict(Country=c, **_GP[c]) for c in COUNTRIES])
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df.rename(columns=COLUMN_LABELS), use_container_width=True, hide_index=True)
 
     with tab5:
         df = pd.DataFrame([dict(Sector=k, **v) for k, v in SECTORS.items()])
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(df.rename(columns=COLUMN_LABELS), use_container_width=True, hide_index=True)
 
-    st.markdown("### Export")
-    choice = st.selectbox("Dataset", ["Profiles", "Trade", "WGI", "Great Powers", "EPA Schedule"])
+    st.markdown("#### Export Dataset")
+    choice = st.selectbox("Select dataset", ["Country Profiles", "Trade Dependence", "Governance (WGI)", "Great-Power Exposure", "EPA Schedule"])
     if st.button("Generate CSV"):
-        if choice == "Profiles":
+        if choice == "Country Profiles":
             out = pd.DataFrame([dict(Country=c, **PROFILES[c]) for c in COUNTRIES])
-        elif choice == "Trade":
+        elif choice == "Trade Dependence":
             out = pd.DataFrame([dict(Country=c, **_TRADE[c]) for c in COUNTRIES])
-        elif choice == "WGI":
+        elif choice == "Governance (WGI)":
             out = pd.DataFrame([dict(Country=c, **_WGI[c]) for c in COUNTRIES])
-        elif choice == "Great Powers":
+        elif choice == "Great-Power Exposure":
             out = pd.DataFrame([dict(Country=c, **_GP[c]) for c in COUNTRIES])
         else:
             out = epa_schedule(country)
-        st.download_button("Download", out.to_csv(index=False).encode(),
-                           f"afcfta_{choice.lower().replace(' ','_')}_{datetime.now():%Y%m%d}.csv", "text/csv")
+        st.download_button(
+            "Download CSV", out.to_csv(index=False).encode(),
+            f"epa_engine_{choice.lower().replace(' ', '_').replace('(', '').replace(')', '')}_{datetime.now():%Y%m%d}.csv",
+            "text/csv",
+        )
 
 
 # ──────────── METHODOLOGY ────────────
 elif page == "Methodology":
-    st.markdown("# Methodology & Literature Grounding")
+    st.markdown("# Methodology & Model Limitations")
+    analyst_note(
+        "This instrument is a <strong>structuring device for scenario analysis</strong>, not a "
+        "predictive model. It organises trade-offs, surfaces parameter sensitivities and structures "
+        "strategic options — it does not forecast negotiation outcomes. "
+        "Findings should be reported as ranges and scenario-conditional results, not as point estimates."
+    )
 
     st.markdown("""
 ## Model Overview
